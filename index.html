@@ -1,0 +1,647 @@
+<!DOCTYPE html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, viewport-fit=cover"
+    />
+    <title>Тихая волна — музыка для спокойных дней</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600&family=Forum&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --bg: #d8d3cd;
+        --surface: #bfd7ea;
+        --sky: #cfe3ee;
+        --sky-deep: #8fb8cf;
+        --chestnut: #7a4e3a;
+        --chestnut-soft: #a6745c;
+        --text: #3b2c25;
+        --muted: #7d6b60;
+        --line: #e6d9c6;
+        box-sizing: border-box;
+        padding-top: env(safe-area-inset-top, 0px);
+        padding-bottom: env(safe-area-inset-bottom, 0px);
+      }
+      @media (prefers-color-scheme: dark) {
+        :root:not([data-theme='light']) {
+          --bg: #2a2320;
+          --surface: #352c28;
+          --sky: #3d5463;
+          --sky-deep: #8fb8cf;
+          --chestnut: #d9b49c;
+          --chestnut-soft: #c49a80;
+          --text: #f1e6d9;
+          --muted: #b9a899;
+          --line: #4a3e38;
+        }
+      }
+      :root[data-theme='dark'] {
+        --bg: #2a2320;
+        --surface: #352c28;
+        --sky: #3d5463;
+        --sky-deep: #8fb8cf;
+        --chestnut: #d9b49c;
+        --chestnut-soft: #c49a80;
+        --text: #f1e6d9;
+        --muted: #b9a899;
+        --line: #4a3e38;
+      }
+      html {
+        scroll-padding-top: env(safe-area-inset-top, 0px);
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        background: var(--bg);
+        color: var(--text);
+        font-family: 'Nunito', 'Segoe UI', Arial, sans-serif;
+        line-height: 1.6;
+        transition: background 0.3s, color 0.3s;
+      }
+      h1,
+      h2,
+      h3 {
+        font-family: 'Cinzel', 'Forum', Georgia, serif;
+        font-weight: 600;
+        margin: 0;
+        color: var(--chestnut);
+      }
+      a {
+        color: inherit;
+        text-decoration: none;
+      }
+      :focus-visible {
+        outline: 3px solid var(--sky-deep);
+        outline-offset: 2px;
+      }
+      .wrap {
+        max-width: 1080px;
+        margin: 0 auto;
+        padding: 0 20px;
+      }
+      header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 20px 0;
+      }
+      .header-actions {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+      .theme-btn {
+        border: 2px solid var(--sky-deep);
+        background: transparent;
+        color: var(--chestnut);
+        width: 44px;
+        height: 44px;
+        border-radius: 50%;
+        font-size: 1.1rem;
+        cursor: pointer;
+        display: grid;
+        place-items: center;
+        padding: 0;
+      }
+      .theme-btn:hover {
+        background: var(--sky);
+      }
+      .logo {
+        font-family: 'Cinzel', 'Forum', Georgia, serif;
+        font-size: 1.4rem;
+        color: var(--chestnut);
+        font-weight: 600;
+      }
+      nav {
+        display: flex;
+        gap: 24px;
+        color: var(--muted);
+      }
+      nav a:hover {
+        color: var(--chestnut);
+      }
+      .hero {
+        display: grid;
+        grid-template-columns: 1.1fr 0.9fr;
+        gap: 40px;
+        align-items: center;
+        padding: 40px 0 64px;
+      }
+      .hero h1 {
+        font-size: clamp(2.2rem, 5vw, 3.6rem);
+        line-height: 1.15;
+      }
+      .hero p {
+        max-width: 46ch;
+        color: var(--muted);
+        font-size: 1.1rem;
+        margin: 18px 0 28px;
+      }
+      .btn {
+        display: inline-block;
+        border: 0;
+        cursor: pointer;
+        font: inherit;
+        font-weight: 700;
+        padding: 13px 28px;
+        border-radius: 999px;
+        background: var(--chestnut);
+        color: var(--surface);
+      }
+      .btn:hover {
+        background: var(--chestnut-soft);
+      }
+      .btn.ghost {
+        background: transparent;
+        color: var(--chestnut);
+        border: 2px solid var(--sky-deep);
+        margin-left: 10px;
+      }
+      .player {
+        background: var(--surface);
+        border-radius: 28px;
+        padding: 24px;
+        border: 1px solid var(--line);
+        transition: background 0.3s;
+      }
+      .cover {
+        aspect-ratio: 1;
+        border-radius: 20px;
+        background: linear-gradient(160deg, var(--sky), var(--bg) 70%);
+        display: grid;
+        place-items: center;
+        overflow: hidden;
+      }
+      .cover svg {
+        width: 70%;
+        height: auto;
+      }
+      .now {
+        margin: 18px 0 12px;
+      }
+      .now b {
+        display: block;
+        font-size: 1.15rem;
+        font-family: 'Cinzel', 'Forum', Georgia, serif;
+        color: var(--chestnut);
+      }
+      .now span {
+        color: var(--muted);
+        font-size: 0.95rem;
+      }
+      .bar {
+        height: 6px;
+        background: var(--line);
+        border-radius: 3px;
+        overflow: hidden;
+        cursor: pointer;
+      }
+      .bar i {
+        display: block;
+        height: 100%;
+        width: 0;
+        background: var(--sky-deep);
+      }
+      .ctrl {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 18px;
+        margin-top: 16px;
+      }
+      .ctrl button {
+        border: 0;
+        background: none;
+        cursor: pointer;
+        color: var(--chestnut);
+        font-size: 1.3rem;
+        width: 44px;
+        height: 44px;
+        border-radius: 50%;
+      }
+      .ctrl button:hover {
+        background: var(--sky);
+      }
+      .ctrl .play {
+        background: var(--chestnut);
+        color: var(--surface);
+        width: 56px;
+        height: 56px;
+      }
+      .ctrl .play:hover {
+        background: var(--chestnut-soft);
+      }
+      section {
+        padding: 48px 0;
+      }
+      section h2 {
+        font-size: 1.9rem;
+        margin-bottom: 8px;
+      }
+      .sub {
+        color: var(--muted);
+        margin: 0 0 28px;
+      }
+      .moods {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 18px;
+      }
+      .mood {
+        border-radius: 22px;
+        padding: 26px 22px;
+        min-height: 150px;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-end;
+        cursor: pointer;
+        border: 0;
+        text-align: left;
+        font: inherit;
+        color: var(--text);
+        transition: background 0.3s;
+      }
+      .mood h3 {
+        font-size: 1.2rem;
+      }
+      .mood span {
+        color: var(--muted);
+        font-size: 0.9rem;
+      }
+      .m1 {
+        background: var(--sky);
+      }
+      .m2 {
+        background: #ead9c0;
+      }
+      .m3 {
+        background: #d9bfae;
+      }
+      .m4 {
+        background: #dfe9ea;
+      }
+      :root[data-theme='dark'] .m2,
+      :root[data-theme='dark'] .m3,
+      :root[data-theme='dark'] .m4 {
+        background: var(--surface);
+      }
+      .list {
+        background: var(--surface);
+        border: 1px solid var(--line);
+        border-radius: 24px;
+        padding: 8px 12px;
+        transition: background 0.3s;
+      }
+      .track {
+        display: grid;
+        grid-template-columns: 32px 1fr auto;
+        gap: 14px;
+        align-items: center;
+        padding: 12px;
+        border-radius: 14px;
+        cursor: pointer;
+        width: 100%;
+        border: 0;
+        background: none;
+        font: inherit;
+        color: inherit;
+        text-align: left;
+      }
+      .track:hover,
+      .track.on {
+        background: var(--sky);
+      }
+      .track .n {
+        color: var(--muted);
+        text-align: center;
+      }
+      .track b {
+        display: block;
+        font-weight: 700;
+      }
+      .track small {
+        color: var(--muted);
+      }
+      .track .t {
+        color: var(--muted);
+        font-size: 0.9rem;
+      }
+      .plans {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+        gap: 18px;
+      }
+      .plan {
+        background: var(--surface);
+        border: 1px solid var(--line);
+        border-radius: 24px;
+        padding: 28px;
+        transition: background 0.3s;
+      }
+      .plan.best {
+        background: var(--sky);
+        border-color: var(--sky-deep);
+      }
+      .plan .price {
+        font-family: 'Cinzel', 'Forum', Georgia, serif;
+        font-size: 2rem;
+        color: var(--chestnut);
+        margin: 10px 0;
+      }
+      .plan ul {
+        padding-left: 18px;
+        color: var(--muted);
+        margin: 0 0 20px;
+      }
+      footer {
+        padding: 36px 0 48px;
+        color: var(--muted);
+        text-align: center;
+        border-top: 1px solid var(--line);
+        margin-top: 30px;
+      }
+      @media (max-width: 760px) {
+        .hero {
+          grid-template-columns: 1fr;
+          padding-top: 10px;
+        }
+        nav {
+          display: none;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <header>
+        <div class="logo">Тихая волна</div>
+        <nav>
+          <a href="#moods">Настроения</a><a href="#top">Хиты</a
+          ><a href="#plans">Подписка</a>
+        </nav>
+        <div class="header-actions">
+          <button
+            class="theme-btn"
+            id="themeBtn"
+            onclick="toggleTheme()"
+            aria-label="Сменить тему"
+          >
+            🌙
+          </button>
+          <a class="btn" href="#plans">Войти</a>
+        </div>
+      </header>
+
+      <div class="hero">
+        <div>
+          <h1>Музыка, которая завораживает с первых секунд</h1>
+          <p>
+            Миллионы треков, спокойные плейлисты и никакой суеты. Включайте,
+            когда нужно сосредоточиться, отдохнуть или просто выдохнуть.
+          </p>
+          <button class="btn" onclick="toggle()">Слушать сейчас</button
+          ><a class="btn ghost" href="#moods">Выбрать настроение</a>
+        </div>
+        <div class="player" aria-label="Плеер">
+          <div class="cover">
+            <svg viewBox="0 0 200 200" aria-hidden="true">
+              <circle cx="100" cy="100" r="86" fill="#7a4e3a" opacity=".9" />
+              <circle
+                cx="100"
+                cy="100"
+                r="60"
+                fill="none"
+                stroke="#e6d9c6"
+                stroke-width="1.5"
+                opacity=".6"
+              />
+              <circle
+                cx="100"
+                cy="100"
+                r="40"
+                fill="none"
+                stroke="#e6d9c6"
+                stroke-width="1.5"
+                opacity=".6"
+              />
+              <circle cx="100" cy="100" r="26" fill="#8fb8cf" />
+              <circle cx="100" cy="100" r="4" fill="#f6efe4" />
+            </svg>
+          </div>
+          <div class="now">
+            <b id="title">Утренний туман</b
+            ><span id="artist">Лёгкий джаз · Анна Верес</span>
+          </div>
+          <div class="bar" id="bar"><i id="fill"></i></div>
+          <div class="ctrl">
+            <button onclick="step(-1)" aria-label="Предыдущий">⏮</button>
+            <button class="play" id="pp" onclick="toggle()" aria-label="Играть">
+              ▶
+            </button>
+            <button onclick="step(1)" aria-label="Следующий">⏭</button>
+          </div>
+        </div>
+      </div>
+      <!--ты начинающий программист и ты должен создать сайт на языке html, он должен быть спокойный,светлых оттенков по типу голубого бежевого каштанового мой сайт должен быть на тему музыки как спотифай или эпл музыка-->
+      <section id="moods">
+        <h2>Что вам сегодня по душе?</h2>
+        <p class="sub">Плейлисты под ваше настроение.</p>
+        <div class="moods">
+          <button class="mood m1" onclick="pick(0)">
+            <h3>Утро у окна</h3>
+            <span>Акустика, 42 трека</span>
+          </button>
+          <button class="mood m2" onclick="pick(1)">
+            <h3>Тёплый вечер</h3>
+            <span>Джаз и соул, 58 треков</span>
+          </button>
+          <button class="mood m3" onclick="pick(2)">
+            <h3>Дождь за стеклом</h3>
+            <span>Эмбиент, 36 треков</span>
+          </button>
+          <button class="mood m4" onclick="pick(3)">
+            <h3>Фокус и работа</h3>
+            <span>Без слов, 64 трека</span>
+          </button>
+        </div>
+      </section>
+      <h1>меня зовут иван</h1>
+      <section id="top">
+        <h2>Сейчас слушают</h2>
+        <p class="sub">Нажмите на трек, чтобы включить.</p>
+        <div class="list" id="list"></div>
+      </section>
+
+      <section id="plans">
+        <h2>Выберите подписку</h2>
+        <p class="sub">
+          Первый месяц бесплатно. Отменить можно в любой момент.
+        </p>
+        <div class="plans">
+          <div class="plan">
+            <h3>Базовая</h3>
+            <div class="price">0 ₸</div>
+            <ul>
+              <li>Случайный порядок</li>
+              <li>Стандартное качество</li>
+            </ul>
+            <button class="btn ghost" style="margin: 0">Начать</button>
+          </div>
+          <div class="plan best">
+            <h3>Личная</h3>
+            <div class="price">1 990 ₸ / мес</div>
+            <ul>
+              <li>Без ограничений</li>
+              <li>Слушать без интернета</li>
+              <li>Высокое качество</li>
+            </ul>
+            <button class="btn" style="margin: 0">Попробовать бесплатно</button>
+          </div>
+          <div class="plan">
+            <h3>Семейная</h3>
+            <div class="price">2 990 ₸ / мес</div>
+            <ul>
+              <li>До 6 аккаунтов</li>
+              <li>Общие плейлисты</li>
+            </ul>
+            <button class="btn ghost" style="margin: 0">Выбрать</button>
+          </div>
+        </div>
+      </section>
+
+      <footer>© 2026 Тихая волна. Учебный проект.</footer>
+    </div>
+
+    <script>
+      const tracks = [
+        {
+          t: 'Утренний туман',
+          a: 'Анна Верес',
+          g: 'Лёгкий джаз',
+          d: '3:42',
+          s: 222,
+        },
+        { t: 'Тёплый плед', a: 'Мира и Лес', g: 'Акустика', d: '4:05', s: 245 },
+        {
+          t: 'Дождь на крыше',
+          a: 'Тихий берег',
+          g: 'Эмбиент',
+          d: '5:18',
+          s: 318,
+        },
+        {
+          t: 'Чашка кофе',
+          a: 'Олег Север',
+          g: 'Босса-нова',
+          d: '3:21',
+          s: 201,
+        },
+        { t: 'Закат над рекой', a: 'Анна Верес', g: 'Соул', d: '4:37', s: 277 },
+        {
+          t: 'Лунная тропа',
+          a: 'Тихий берег',
+          g: 'Фортепиано',
+          d: '3:58',
+          s: 238,
+        },
+      ];
+      let cur = 0,
+        playing = false,
+        pos = 0,
+        timer = null;
+      const $ = (id) => document.getElementById(id);
+      const list = $('list');
+      tracks.forEach((x, i) => {
+        const b = document.createElement('button');
+        b.className = 'track';
+        b.dataset.i = i;
+        b.innerHTML = `<span class="n">${i + 1}</span><span><b>${
+          x.t
+        }</b><small>${x.a} · ${x.g}</small></span><span class="t">${
+          x.d
+        }</span>`;
+        b.onclick = () => {
+          cur = i;
+          pos = 0;
+          playing = true;
+          render();
+        };
+        list.appendChild(b);
+      });
+      function render() {
+        const x = tracks[cur];
+        $('title').textContent = x.t;
+        $('artist').textContent = x.g + ' · ' + x.a;
+        $('pp').textContent = playing ? '⏸' : '▶';
+        document
+          .querySelectorAll('.track')
+          .forEach((e) => e.classList.toggle('on', +e.dataset.i === cur));
+        $('fill').style.width = (pos / x.s) * 100 + '%';
+        clearInterval(timer);
+        if (playing)
+          timer = setInterval(() => {
+            pos++;
+            if (pos >= x.s) {
+              step(1);
+              return;
+            }
+            $('fill').style.width = (pos / x.s) * 100 + '%';
+          }, 1000);
+      }
+      function toggle() {
+        playing = !playing;
+        render();
+      }
+      function step(d) {
+        cur = (cur + d + tracks.length) % tracks.length;
+        pos = 0;
+        render();
+      }
+      function pick(i) {
+        cur = i % tracks.length;
+        pos = 0;
+        playing = true;
+        render();
+        $('top').scrollIntoView({ behavior: 'smooth' });
+      }
+      $('bar').onclick = (e) => {
+        const r = e.currentTarget.getBoundingClientRect();
+        pos = Math.floor(((e.clientX - r.left) / r.width) * tracks[cur].s);
+        render();
+      };
+      render();
+
+      // ---- Светлая / тёмная тема ----
+      const root = document.documentElement;
+
+      function applyTheme(t) {
+        root.dataset.theme = t;
+        $('themeBtn').textContent = t === 'dark' ? '☀️' : '🌙';
+        try {
+          localStorage.setItem('theme', t);
+        } catch (e) {}
+      }
+
+      function toggleTheme() {
+        applyTheme(root.dataset.theme === 'dark' ? 'light' : 'dark');
+      }
+
+      let saved = null;
+      try {
+        saved = localStorage.getItem('theme');
+      } catch (e) {}
+      applyTheme(
+        saved ||
+          (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light')
+      );
+    </script>
+  </body>
+</html>
